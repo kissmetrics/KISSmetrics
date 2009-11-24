@@ -1,0 +1,14 @@
+KISSmetrics is different from other analytics platforms due to a combination of
+three key features. We focus on funnels and conversions and make them easy to
+track and interpret, use people as the basic unit of measure, and support
+tracking of highly-flexible custom data through our simple API.
+
+Find out more at http://www.kissmetrics.com
+
+* ruby client is complete with crontab option
+* php client is complete with crontab option
+* python client does not support crontab
+
+TODO:
+
+API testing needs to be added to this repo.
