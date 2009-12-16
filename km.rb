@@ -1,8 +1,13 @@
-require 'uri'
+require 'cgi'
 require 'socket'
 require 'fileutils'
 
+# changelog:
+# 1.0.1
+# - '@' are now escaped properly in properties.
+
 class KM
+  VERSION    = '1.0.1'
   @id        = nil
   @host      = 'trk.kissmetrics.com:80'
   @log_dir   = '/tmp'
@@ -138,7 +143,7 @@ class KM
       data.update('_p' => @id) unless update == false
       data.update('_k' => @key, '_t' => Time.now.to_i)
       data.inject(query) do |query,key_val|
-        query_arr <<  key_val.collect { |i| URI.escape i.to_s }.join('=')
+        query_arr <<  key_val.collect { |i| CGI.escape i.to_s }.join('=')
       end
       query = '/' + type + '?' + query_arr.join('&')
       if @use_cron
