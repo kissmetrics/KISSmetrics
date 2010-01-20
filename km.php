@@ -111,8 +111,12 @@ class KM
         return;
       }
 
-      rename(self::log_name('query'), self::log_name('send'));
-      $fh = fopen(self::log_name('send'), "r");
+	  // Fixed: If the processing takes more than one second the self::log_name returns a different filename due to time() being used
+	  $query_log = self::log_name('query');
+	  $send_log = self::log_name('send');
+	  
+      rename($query_log, $send_log);
+      $fh = fopen($send_log, "r");
       if ($fh) {
         while (!feof($fh)) {
           self::$query_line = fgets($fh);
@@ -126,7 +130,7 @@ class KM
         }
         fclose($fh);
       }
-      unlink(self::log_name('send'));
+      unlink($send_log);
       self::$query_line = null;
       restore_error_handler();
     }
