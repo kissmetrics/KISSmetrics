@@ -41,7 +41,7 @@ sub record {
 
 sub alias {
     my ($self, $name, $alias_to) = @_;
-    return unless $self->_is_identified;
+    return unless $self->_is_initialized;
     $self->_generate_query('a', { '_n' => $alias_to, '_p' => $name }, 0);
 }
 
