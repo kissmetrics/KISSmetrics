@@ -12,6 +12,7 @@ class KM
   static $use_cron   = false;
   static $query_line = null;
   static $hostname   = null;
+  static $stderr     = null;
 
   static function init($key, $options=array())
   {
@@ -21,6 +22,7 @@ class KM
     self::$log_dir   = self::array_get($options,'log_dir',self::$log_dir);
     self::$to_stderr = self::array_get($options,'to_stderr',self::$to_stderr);
     self::$use_cron  = self::array_get($options,'use_cron',self::$use_cron);
+    self::$stderr    = fopen('php://stderr', 'w'); // opens stderr in write mode
     self::is_log_dir_writable();
   }
 
@@ -169,7 +171,7 @@ class KM
   {
     if (!is_writable(self::$log_dir))
       if (self::$to_stderr)
-        fputs("php://stderr","Could't open " . self::$log_dir . " for writing. Does " . self::$log_dir . " exist? Permissions?");
+        fputs(self::$stderr,"Could't open " . self::$log_dir . " for writing. Does " . self::$log_dir . " exist? Permissions?");
   }
 
   static protected function reset() {
@@ -242,7 +244,7 @@ class KM
   {
     $msg = '[' . self::epoch() . '] ' . $msg;
     if (self::$to_stderr)
-      fwrite("php://stderr", "$msg\n");
+      fwrite(self::$stderr, "$msg\n");
     self::log('error', $msg);
   }
 
@@ -333,7 +335,7 @@ class KM
 if ( basename(KM::array_get($_SERVER,'SCRIPT_NAME')) == basename(__FILE__) )
 {
   if (!KM::array_get($argv,1))
-    fputs("php://stderr","At least one argument required. km.php <km_key> [<log_dir>]\n");
+    fputs(self::$stderr,"At least one argument required. km.php <km_key> [<log_dir>]\n");
 
   KM::init(KM::array_get($argv,1), array('log_dir' => KM::array_get($argv,2,KM::$log_dir), 'host' => KM::array_get($argv,3,KM::$host) ));
   KM::send_logged_queries();
