@@ -13,6 +13,7 @@ class KM
   static $query_line = null;
   static $hostname   = null;
   static $stderr     = null;
+  static $VERSION    = '1.0.3';
 
   static function init($key, $options=array())
   {
