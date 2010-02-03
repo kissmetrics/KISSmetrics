@@ -111,10 +111,10 @@ class KM
         return;
       }
 
-	  // Fixed: If the processing takes more than one second the self::log_name returns a different filename due to time() being used
-	  $query_log = self::log_name('query');
-	  $send_log = self::log_name('send');
-	  
+      // Fixed: If the processing takes more than one second the self::log_name returns a different filename due to time() being used
+      $query_log = self::log_name('query');
+      $send_log = self::log_name('send');
+
       rename($query_log, $send_log);
       $fh = fopen($send_log, "r");
       if ($fh) {
