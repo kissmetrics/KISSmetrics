@@ -169,7 +169,7 @@ class KM
   {
     if (!is_writable(self::$log_dir))
       if (self::$to_stderr)
-        fputs(STDERR,"Could't open " . self::$log_dir . " for writing. Does " . self::$log_dir . " exist? Permissions?");
+        fputs("php://stderr","Could't open " . self::$log_dir . " for writing. Does " . self::$log_dir . " exist? Permissions?");
   }
 
   static protected function reset() {
@@ -242,7 +242,7 @@ class KM
   {
     $msg = '[' . self::epoch() . '] ' . $msg;
     if (self::$to_stderr)
-      fwrite(STDERR, "$msg\n");
+      fwrite("php://stderr", "$msg\n");
     self::log('error', $msg);
   }
 
@@ -333,7 +333,7 @@ class KM
 if ( basename(KM::array_get($_SERVER,'SCRIPT_NAME')) == basename(__FILE__) )
 {
   if (!KM::array_get($argv,1))
-    fputs(STDERR,"At least one argument required. km.php <km_key> [<log_dir>]\n");
+    fputs("php://stderr","At least one argument required. km.php <km_key> [<log_dir>]\n");
 
   KM::init(KM::array_get($argv,1), array('log_dir' => KM::array_get($argv,2,KM::$log_dir), 'host' => KM::array_get($argv,3,KM::$host) ));
   KM::send_logged_queries();
