@@ -237,7 +237,7 @@ class KM
     return $logs[$type];
   }
 
-  static protected function log_query($msg) { self::log('query',$msg); }
+  static protected function log_query($msg) { self::log('query',$msg . CHR(13)); }
 
   static protected function log_send($msg) { self::log('send',$msg); }
 
