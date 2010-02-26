@@ -12,8 +12,7 @@ class KM
   static $use_cron   = false;
   static $query_line = null;
   static $hostname   = null;
-  static $stderr     = null;
-  static $VERSION    = '1.0.3';
+  static $VERSION    = '1.0.4';
 
   static function init($key, $options=array())
   {
@@ -23,7 +22,6 @@ class KM
     self::$log_dir   = self::array_get($options,'log_dir',self::$log_dir);
     self::$to_stderr = self::array_get($options,'to_stderr',self::$to_stderr);
     self::$use_cron  = self::array_get($options,'use_cron',self::$use_cron);
-    self::$stderr    = fopen('php://stderr', 'w'); // opens stderr in write mode
     self::is_log_dir_writable();
   }
 
@@ -119,19 +117,14 @@ class KM
       $send_log = self::log_name('send');
 
       rename($query_log, $send_log);
-      $fh = fopen($send_log, "r");
-      if ($fh) {
-        while (!feof($fh)) {
-          self::$query_line = fgets($fh);
-          try { self::send_query(self::$query_line); }
-          catch (Exception $e)
-          {
-            if (self::$query_line)
-              log_query(self::$query_line);
-            log_error($e->getMessage());
-          }
+      $fh_send = fopen($send_log, "r");
+      if ($fh_send) {
+        while (!feof($fh_send)) {
+          self::$query_line = fgets($fh_send);
+          if (self::$query_line == false) continue;
+          self::send_query(self::$query_line);
         }
-        fclose($fh);
+        fclose($fh_send);
       }
       unlink($send_log);
       self::$query_line = null;
@@ -147,11 +140,6 @@ class KM
   static function error_handler($errno, $errstr, $errfile, $errline)
   {
     self::log_error("[$errno] $errstr on line $errline in file $errfile");
-    if (self::$query_line)
-    {
-      self::log_query(self::$query_line);
-      self::$query_line = null;
-    }
   }
 
   static function array_get($array, $key, $default=null)
@@ -172,7 +160,7 @@ class KM
   {
     if (!is_writable(self::$log_dir))
       if (self::$to_stderr)
-        fputs(self::$stderr,"Could't open " . self::$log_dir . " for writing. Does " . self::$log_dir . " exist? Permissions?");
+        error_log("Could't open " . self::$log_dir . " for writing. Does " . self::$log_dir . " exist? Permissions?");
   }
 
   static protected function reset() {
@@ -245,7 +233,7 @@ class KM
   {
     $msg = '[' . self::epoch() . '] ' . $msg;
     if (self::$to_stderr)
-      fwrite(self::$stderr, "$msg\n");
+      error_log("$msg");
     self::log('error', $msg);
   }
 
@@ -255,7 +243,7 @@ class KM
     try
     {
       $fh = fopen(self::log_name($type),'a');
-      fwrite($fh, $msg);
+      fputs($fh, $msg . "\n");
       fclose($fh);
       restore_error_handler();
     }
@@ -304,6 +292,7 @@ class KM
 
   static protected function send_query($query)
   {
+    $query = chop($query); // make sure we don't get newlines;
     try
     {
       $host_port = explode(':',self::$host);
@@ -336,7 +325,7 @@ class KM
 if ( basename(KM::array_get($_SERVER,'SCRIPT_NAME')) == basename(__FILE__) )
 {
   if (!KM::array_get($argv,1))
-    fputs(self::$stderr,"At least one argument required. km.php <km_key> [<log_dir>]\n");
+    error_log("At least one argument required. km.php <km_key> [<log_dir>]");
 
   KM::init(KM::array_get($argv,1), array('log_dir' => KM::array_get($argv,2,KM::$log_dir), 'host' => KM::array_get($argv,3,KM::$host) ));
   KM::send_logged_queries();
