@@ -12,7 +12,7 @@ class KM
   static $use_cron   = false;
   static $query_line = null;
   static $hostname   = null;
-  static $VERSION    = '1.0.4';
+  static $VERSION    = '1.0.5';
 
   static function init($key, $options=array())
   {
@@ -225,7 +225,7 @@ class KM
     return $logs[$type];
   }
 
-  static protected function log_query($msg) { self::log('query',$msg . CHR(13)); }
+  static protected function log_query($msg) { self::log('query',$msg); }
 
   static protected function log_send($msg) { self::log('send',$msg); }
 
