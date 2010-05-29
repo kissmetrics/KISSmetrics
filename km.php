@@ -259,7 +259,7 @@ class KM
     if ($update)
       $data = array_merge($data, array( '_p' => self::$id,));
 
-    $query = '/' . $type . '?' . http_build_query($data);
+    $query = '/' . $type . '?' . http_build_query($data, '', '&');
 
     if (self::$use_cron)
       self::log_query($query);
