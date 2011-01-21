@@ -78,9 +78,18 @@ class KM:
   @classmethod
   def request(cls,type,data,update=True):
     query = []
-    data.update({'_k': cls._key, '_t': cls.now().strftime('%s') })
+
+    # if user has defined their own _t, then include necessary _d
+    if '_t' in data:
+      data['_d'] = 1
+    else:
+      data['_t'] = cls.now().strftime('%s')
+
+    # add customer key to data sent
+    data['_k'] = cls._key
+
     if update:
-      data.update({'_p': cls._id})
+      data['_p'] = cls._id
 
     for key,val in data.items():
       query.append( urllib.quote(str(key)) + '=' + urllib.quote(str(val)) )
