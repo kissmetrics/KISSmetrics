@@ -12,7 +12,7 @@ class KM
   static $use_cron   = false;
   static $query_line = null;
   static $hostname   = null;
-  static $VERSION    = '1.0.5';
+  static $VERSION    = '1.1.0';
 
   static function init($key, $options=array())
   {
@@ -255,9 +255,10 @@ class KM
 
   static protected function generate_query($type,$data,$update = true)
   {
-    $data = array_merge($data, array( '_k' => self::$key, '_t' => self::epoch() ));
-    if ($update)
-      $data = array_merge($data, array( '_p' => self::$id,));
+    $data['_k'] = self::$key;
+    if (array_key_exists('_t', $data)) $data['_d'] = 1;
+    else $data['_t'] = self::epoch();
+    if ($update) $data['_p'] = self::$id;
 
     $query = '/' . $type . '?' . http_build_query($data, '', '&');
 
