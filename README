@@ -5,7 +5,7 @@ tracking of highly-flexible custom data through our simple API.
 
 Find out more at http://www.kissmetrics.com
 
-* ruby client is complete with crontab option
+* ruby client has moved to https://github.com/kissmetrics/km
 * php client is complete with crontab option
 * python client does not support crontab
 * perl client is complete with crontab option (untested)
