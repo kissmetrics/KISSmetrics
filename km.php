@@ -256,7 +256,8 @@ class KM
   static protected function generate_query($type,$data,$update = true)
   {
     $data['_k'] = self::$key;
-    if (array_key_exists('_t', $data)) $data['_d'] = 1;
+    // Keep timestamps when batching things via cron, or if they're manually specified
+    if (self::$use_cron || array_key_exists('_t', $data)) $data['_d'] = 1;
     else $data['_t'] = self::epoch();
     if ($update) $data['_p'] = self::$id;
 
