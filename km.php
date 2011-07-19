@@ -243,8 +243,10 @@ class KM
     try
     {
       $fh = fopen(self::log_name($type),'a');
-      fputs($fh, $msg . "\n");
-      fclose($fh);
+      if($fh) {
+        fputs($fh, $msg . "\n");
+        fclose($fh);
+      }
       restore_error_handler();
     }
     catch(Exception $e)
