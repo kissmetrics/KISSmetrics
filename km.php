@@ -338,4 +338,3 @@ if ( basename(KM::array_get($_SERVER,'SCRIPT_NAME')) == basename(__FILE__) )
   KM::init(KM::array_get($argv,1), array('log_dir' => KM::array_get($argv,2,KM::$log_dir), 'host' => KM::array_get($argv,3,KM::$host) ));
   KM::send_logged_queries();
 }
-?>
