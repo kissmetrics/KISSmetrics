@@ -139,7 +139,11 @@ class KM
 
   static function error_handler($errno, $errstr, $errfile, $errline)
   {
-    self::log_error("[$errno] $errstr on line $errline in file $errfile");
+    static $handler_depth = 0;
+    if(++$handler_depth <= 4) {
+      self::log_error("[$errno] $errstr on line $errline in file $errfile");
+    }
+    $handler_depth--;
   }
 
   static function array_get($array, $key, $default=null)
