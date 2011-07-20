@@ -263,8 +263,15 @@ class KM
   {
     $data['_k'] = self::$key;
     // Keep timestamps when batching things via cron, or if they're manually specified
-    if (self::$use_cron || array_key_exists('_t', $data)) $data['_d'] = 1;
-    else $data['_t'] = self::epoch();
+    if (array_key_exists('_t', $data))
+    {
+      $data['_d'] = 1;
+    }
+    else
+    {
+      $data['_t'] = self::epoch();
+      if(self::$use_cron) $data['_d'] = 1;
+    }
     if ($update) $data['_p'] = self::$id;
 
     $query = '/' . $type . '?' . http_build_query($data, '', '&');
