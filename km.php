@@ -139,7 +139,11 @@ class KM
 
   static function error_handler($errno, $errstr, $errfile, $errline)
   {
-    self::log_error("[$errno] $errstr on line $errline in file $errfile");
+    static $handler_depth = 0;
+    if(++$handler_depth <= 4) {
+      self::log_error("[$errno] $errstr on line $errline in file $errfile");
+    }
+    $handler_depth--;
   }
 
   static function array_get($array, $key, $default=null)
@@ -243,8 +247,10 @@ class KM
     try
     {
       $fh = fopen(self::log_name($type),'a');
-      fputs($fh, $msg . "\n");
-      fclose($fh);
+      if($fh) {
+        fputs($fh, $msg . "\n");
+        fclose($fh);
+      }
       restore_error_handler();
     }
     catch(Exception $e)
@@ -256,8 +262,16 @@ class KM
   static protected function generate_query($type,$data,$update = true)
   {
     $data['_k'] = self::$key;
-    if (array_key_exists('_t', $data)) $data['_d'] = 1;
-    else $data['_t'] = self::epoch();
+    // Keep timestamps when batching things via cron, or if they're manually specified
+    if (array_key_exists('_t', $data))
+    {
+      $data['_d'] = 1;
+    }
+    else
+    {
+      $data['_t'] = self::epoch();
+      if(self::$use_cron) $data['_d'] = 1;
+    }
     if ($update) $data['_p'] = self::$id;
 
     $query = '/' . $type . '?' . http_build_query($data, '', '&');
@@ -331,4 +345,3 @@ if ( basename(KM::array_get($_SERVER,'SCRIPT_NAME')) == basename(__FILE__) )
   KM::init(KM::array_get($argv,1), array('log_dir' => KM::array_get($argv,2,KM::$log_dir), 'host' => KM::array_get($argv,3,KM::$host) ));
   KM::send_logged_queries();
 }
-?>
