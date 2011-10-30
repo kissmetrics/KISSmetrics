@@ -1,4 +1,4 @@
-<?
+<?php
 
 class KM
 {
@@ -275,6 +275,7 @@ class KM
     if ($update) $data['_p'] = self::$id;
 
     $query = '/' . $type . '?' . http_build_query($data, '', '&');
+    $query = str_replace('+', '%20', $query);
 
     if (self::$use_cron)
       self::log_query($query);
