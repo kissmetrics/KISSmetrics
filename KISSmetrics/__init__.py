@@ -8,12 +8,15 @@ km.record('an event', {'attr': '1'})
 
 import urllib
 import socket
+import httplib
 from datetime import datetime
 
 class KM(object):
-    def __init__(self, key, host='trk.kissmetrics.com:80', logging=True):
+    
+    def __init__(self, key, host='trk.kissmetrics.com:80', http_timeout=2, logging=True):
         self._key    = key
         self._host = host
+        self._http_timeout = http_timeout
         self._logging = logging
 
     def identify(self, id):
@@ -83,20 +86,10 @@ class KM(object):
         if update:
             data['_p'] = self._id
 
-        for key, val in data.items():
-            query.append(urllib.quote(str(key)) + '=' + urllib.quote(str(val)))
-
         try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            host, port = self._host.split(':')
-            sock.connect((host, int(port)))
-            sock.setblocking(0) # 0 is non-blocking
-
-            get = 'GET /' + type + '?' + '&'.join(query) + " HTTP/1.1\r\n"
-            out = get
-            out += "Host: " + socket.gethostname() + "\r\n"
-            out += "Connection: Close\r\n\r\n";
-            sock.send(out)
-            sock.close()
+            connection = httplib.HTTPConnection(self._host, timeout=self._http_timeout)
+            connection.request('GET', '/%s?%s' % (type, urllib.urlencode(data)))
+            r = connection.getresponse()
+            connection.close()
         except:
             self.logm("Could not transmit to " + self._host)
