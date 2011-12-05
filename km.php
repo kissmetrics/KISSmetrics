@@ -150,7 +150,7 @@ class KM
   {
     if ( !is_array($array) )
       return $default;
-    if (array_key_exists($key, $array))
+    if (array_key_exists($key, $array) && !empty($array[$key]))
       return $array[$key];
     else
       return $default;
