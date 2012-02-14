@@ -14,6 +14,7 @@ from datetime import datetime
 class KM(object):
     
     def __init__(self, key, host='trk.kissmetrics.com:80', http_timeout=2, logging=True):
+        self._id = None
         self._key    = key
         self._host = host
         self._http_timeout = http_timeout
@@ -48,11 +49,11 @@ class KM(object):
         self._key = None
 
     def check_identify(self):
-        if self._id == None:
+        if self._id is None:
             raise Exception, "Need to identify first (KM.identify <user>)"
 
     def check_init(self):
-        if self._key == None:
+        if self._key is None:
             raise Exception, "Need to initialize first (KM.init <your_key>)"
 
     def now(self):
