@@ -90,6 +90,7 @@ class KM(object):
             connection = httplib.HTTPConnection(self._host, timeout=self._http_timeout)
             connection.request('GET', '/%s?%s' % (type, urllib.urlencode(data)))
             r = connection.getresponse()
-            connection.close()
         except:
             self.logm("Could not transmit to " + self._host)
+        finally:
+            connection.close()
