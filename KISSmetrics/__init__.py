@@ -22,7 +22,9 @@ class KM(object):
     def identify(self, id):
         self._id = id
 
-    def record(self, action, props={}):
+    def record(self, action, props=None):
+        if props is None:
+            props = {}
         self.check_id_key()
         if isinstance(action, dict):
             self.set(action)
