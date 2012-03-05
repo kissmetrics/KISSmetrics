@@ -146,11 +146,11 @@ class KM
     $handler_depth--;
   }
 
-  static function array_get($array, $key, $default=null)
+  static function array_get($array, $key, $default=null, $treat_empty_as_not_set=false)
   {
     if ( !is_array($array) )
       return $default;
-    if (array_key_exists($key, $array) && !empty($array[$key]))
+    if (array_key_exists($key, $array) && (!$treat_empty_as_not_set || !empty($array[$key])))
       return $array[$key];
     else
       return $default;
@@ -302,7 +302,7 @@ class KM
         self::$hostname = $hostname;
     }
 
-    self::$hostname = self::array_get($_SERVER,'HOSTNAME',self::$hostname);
+    self::$hostname = self::array_get($_SERVER,'HOSTNAME',self::$hostname,true);
     return self::$hostname;
   }
 
@@ -343,6 +343,6 @@ if ( basename(KM::array_get($_SERVER,'SCRIPT_NAME')) == basename(__FILE__) )
   if (!KM::array_get($argv,1))
     error_log("At least one argument required. km.php <km_key> [<log_dir>]");
 
-  KM::init(KM::array_get($argv,1), array('log_dir' => KM::array_get($argv,2,KM::$log_dir), 'host' => KM::array_get($argv,3,KM::$host) ));
+  KM::init(KM::array_get($argv,1), array('log_dir' => KM::array_get($argv,2,KM::$log_dir,true), 'host' => KM::array_get($argv,3,KM::$host,true) ));
   KM::send_logged_queries();
 }
