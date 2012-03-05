@@ -12,7 +12,7 @@ class KM
   static $use_cron   = false;
   static $query_line = null;
   static $hostname   = null;
-  static $VERSION    = '1.1.0';
+  static $VERSION    = '1.1.1';
 
   static function init($key, $options=array())
   {
