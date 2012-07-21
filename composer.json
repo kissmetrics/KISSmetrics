@@ -1,5 +1,5 @@
 {
-    "name": "kissmetrics/KISSmetrics",
+    "name": "kissmetrics/kissmetrics",
     "description": "KISSmetrics API - PHP, Python",
     "autoload": {
         "classmap": ["km.php"]
