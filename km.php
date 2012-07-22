@@ -11,7 +11,6 @@ class KM
   static $to_stderr  = true;
   static $use_cron   = false;
   static $query_line = null;
-  static $hostname   = null;
   static $VERSION    = '1.1.1';
 
   static function init($key, $options=array())
