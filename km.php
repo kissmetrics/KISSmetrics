@@ -11,7 +11,6 @@ class KM
   static $to_stderr  = true;
   static $use_cron   = false;
   static $query_line = null;
-  static $hostname   = null;
   static $VERSION    = '1.1.1';
 
   static function init($key, $options=array())
@@ -290,22 +289,6 @@ class KM
     }
   }
 
-  static protected function get_hostname()
-  {
-    if (self::$hostname)
-      return self::$hostname;
-
-    self::$hostname = php_uname('n');
-    if (is_callable('gethostname'))
-    {
-      if ($hostname = gethostname())
-        self::$hostname = $hostname;
-    }
-
-    self::$hostname = self::array_get($_SERVER,'HOSTNAME',self::$hostname,true);
-    return self::$hostname;
-  }
-
   static protected function send_query($query)
   {
     $query = chop($query); // make sure we don't get newlines;
@@ -320,7 +303,7 @@ class KM
       } else {
         stream_set_blocking($fp,0); // If mode is 0, the given stream will be switched to non-blocking mode, and if 1, it will be switched to blocking mode. 
         $out = $get;
-        $out .= "Host:" . self::get_hostname() . "\r\n";
+        $out .= "Host:" . self::$host . "\r\n";
         $out .= "Connection: Close\r\n\r\n";
         $write_success = fwrite($fp, $out);
         if (!$write_success)
