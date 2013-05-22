@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-sdict = dict(
+from distutils.core import setup
+
+setup(
     name = 'KISSmetrics',
     packages = ['KISSmetrics'],
     version = '0.1.0',
@@ -12,10 +14,10 @@ sdict = dict(
     maintainer = 'kissmetrics',
     maintainer_email = 'support@kissmetrics.com',
     keywords = ['kissmetrics'],
-#    license = 'MIT',
+    license = 'Apache Software License',
     classifiers=[
         'Programming Language :: Python',
-#        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
@@ -24,5 +26,3 @@ sdict = dict(
     install_requires = [],
 )
 
-from distutils.core import setup
-setup(**sdict)

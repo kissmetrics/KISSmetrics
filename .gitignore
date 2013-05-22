@@ -3,3 +3,5 @@ dist
 build
 *.pyc
 vendor
+env
+MANIFEST
