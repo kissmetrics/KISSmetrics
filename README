@@ -1,3 +1,6 @@
+** This repository is now deprecated, please see https://github.com/kissmetrics/KISSmetrics/releases/tag/v1.0.0
+for the final versions of all included clients **
+
 KISSmetrics is different from other analytics platforms due to a combination of
 three key features. We focus on funnels and conversions and make them easy to
 track and interpret, use people as the basic unit of measure, and support
